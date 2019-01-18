@@ -17,7 +17,7 @@ class Header extends Component {
     }
 
     emptyState = () => {
-        return { requestCount: 0 };
+        return { requestCount: 0, failedRequestCount: 0 };
     };
 
     componentDidMount() {
@@ -31,6 +31,7 @@ class Header extends Component {
             this.dispatcher.dispatch(
                 healthCheckRequestRegister(
                     this.state.requestCount + 1,
+                    this.state.failedRequestCount,
                     localResponse.data.message,
                     green ) );
             this.setState({ requestCount : this.store.requestCount });
@@ -38,7 +39,13 @@ class Header extends Component {
         const failCallback = (error) => {
             console.log('FUCK');
             console.log(error.message);
-            this.dispatcher.dispatch( healthCheckRequestRegister( this.state.requestCount, error.message, red ) );
+            this.dispatcher.dispatch(
+                healthCheckRequestRegister(
+                    this.state.requestCount,
+                    this.state.failedRequestCount + 1,
+                    error.message,
+                    red ) );
+            this.setState({ failedRequestCount : this.store.failedRequestCount });
         };
 
         axios.get( configuration.URI.host + '/health-check' )
@@ -60,6 +67,13 @@ class Header extends Component {
                         }}>
                             Health check
                         </Button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Health check requests failure count:</strong> { this.store.failedRequestCount}</td>
+                    <td>|</td>
+                    <td>
+                        :)
                     </td>
                 </tr>
             </table>

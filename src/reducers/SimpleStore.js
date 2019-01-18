@@ -1,6 +1,6 @@
 import {HEALTH_CHECK} from "../constants/Constant";
 
-const initialState = { requestCount : 0,  responseText : "", img : ""};
+const initialState = { requestCount : 0, failedRequestCount : 0, responseText : "", img : ""};
 
 const simpleStore = (state = initialState, action) => {
 
@@ -8,6 +8,7 @@ const simpleStore = (state = initialState, action) => {
     case HEALTH_CHECK: {
         console.log(action);
         state.type = action.type;
+        state.failedRequestCount = action.failedRequestCount;
         state.requestCount = action.requestCount;
         state.responseText = action.responseText;
         state.img = action.img;
