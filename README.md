@@ -11,7 +11,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ### `npm run build`
 ### `npm start`
 
-##React def readme
+## React default readme
 
 In the project directory, you can run:
 
