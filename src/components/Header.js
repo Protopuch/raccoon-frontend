@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {healthCheckRequestRegister} from "../actions";
+import {healthCheckRequestRegister, setHealthCheckHistory} from "../actions";
 import Button from 'react-button-component';
 import axios from "axios/index";
 import {configuration} from "../configurations/Configuration";
@@ -17,12 +17,18 @@ class Header extends Component {
     }
 
     emptyState = () => {
-        return { requestCount: 0, failedRequestCount: 0 };
+        return { requestCount: 0, failedRequestCount: 0, history: [] };
     };
 
-    componentDidMount() {
-
-    }
+    updateHistoryList = (newHistoryBlock) => {
+        this.setState({
+            history: [...this.state.history, newHistoryBlock]
+        });
+        console.log(this.state.history);
+        this.dispatcher.dispatch(
+            setHealthCheckHistory(this.state.history)
+        );
+    };
 
     healthCheck = () => {
         const successCallback = (localResponse) => {
@@ -35,6 +41,7 @@ class Header extends Component {
                     localResponse.data.message,
                     green ) );
             this.setState({ requestCount : this.store.requestCount });
+            this.updateHistoryList( { date : new Date().toLocaleTimeString(), message : localResponse.data.message, img : green } );
         };
         const failCallback = (error) => {
             console.log('FUCK');
@@ -46,6 +53,7 @@ class Header extends Component {
                     error.message,
                     red ) );
             this.setState({ failedRequestCount : this.store.failedRequestCount });
+            this.updateHistoryList( { date : new Date().toLocaleTimeString(), message : error.message, img : red } );
         };
 
         axios.get( configuration.URI.host + '/health-check' )
