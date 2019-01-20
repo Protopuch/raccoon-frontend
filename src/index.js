@@ -17,7 +17,7 @@ const render = () => {
     ReactDOM.render(<Provider store = { store } >
             <Header dispatcher = { store } store = { store.getState().simpleStore } />
             <ResponseStatusBar store = { store.getState().simpleStore } />
-            <ResponseHistoryList store = { store.getState().simpleStore } />
+            <ResponseHistoryList dispatcher = { store } store = { store.getState().simpleStore } />
         </Provider>,
         document.getElementById('root'));
 };
